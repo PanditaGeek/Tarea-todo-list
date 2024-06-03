@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>DBP</title>
+    <link rel="stylesheet" type="text/css" href="style.css"> 
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelector('#nueva-tarea').onsubmit = (evento) => {
+          evento.preventDefault();
+
+          const cajaVerificacion = document.createElement('input');
+          cajaVerificacion.setAttribute('type', 'checkbox');
+
+          const elementoLista = document.createElement('li');
+          elementoLista.appendChild(cajaVerificacion);
+          elementoLista.appendChild(
+            document.createTextNode(document.querySelector('#tarea').value)
+          );
+
+          const botonEliminar = document.createElement('button');
+          botonEliminar.textContent = 'X';
+
+          botonEliminar.addEventListener('click', () => {
+            elementoLista.parentNode.removeChild(elementoLista);
+          });
+
+          elementoLista.appendChild(botonEliminar);
+          cajaVerificacion.addEventListener('change', function () {
+            if (this.checked) {
+              elementoLista.classList.add('completado');
+            } else {
+              elementoLista.classList.remove('completado');
+            }
+          });
+          document.querySelector('#tareas').appendChild(elementoLista);
+
+          document.querySelector('#tarea').value = '';
+
+          return false;
+        };
+
+        const botonMarcarTodos = document.createElement('button');
+        botonMarcarTodos.textContent = 'Seleccionar todo';
+
+        botonMarcarTodos.addEventListener('click', () => {
+          const cajasVerificacion = document.querySelectorAll('#tareas input[type="checkbox"]');
+          cajasVerificacion.forEach((cajaVerificacion) => {
+            cajaVerificacion.checked = true; 
+            cajaVerificacion.parentNode.classList.add('completado');
+          });
+        });
+
+        const botonEliminarSeleccionadas = document.createElement('button');
+        botonEliminarSeleccionadas.textContent = 'Eliminar';
+
+        botonEliminarSeleccionadas.addEventListener('click', () => {
+          const cajasVerificacion = document.querySelectorAll('#tareas input[type="checkbox"]:checked');
+          cajasVerificacion.forEach((cajaVerificacion) => {
+            cajaVerificacion.parentNode.remove();
+          });
+        });
+
+        document.querySelector('#tareas').before(botonMarcarTodos);
+        document.querySelector('#tareas').before(botonEliminarSeleccionadas);
+      });
+    </script>
+</head>
+<body>
+  <div class="contenedor"> 
+      <h1>Todo List</h1>
+      <h1>Tareas</h1>
+      <form id="nueva-tarea">
+          <input id="tarea" autocomplete="off" autofocus placeholder="Tareas" type="text" />
+          <input type="submit" value="Enviar" />
+      </form>
+      <ol id="tareas"></ol>
+  </div>
+</body>
+</html>
